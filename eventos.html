@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reserva de intérpretes profesionales en Cases Language Services. Garantice el éxito lingüístico de sus eventos.">
+    <title>Reserva de Intérpretes | Cases Language Services</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ==========================================================================
+           Estilos avanzados para el motor de reservas y calendario (CLS)
+           ========================================================================== */
+        .booking-container {
+            max-width: 950px;
+            margin: 40px auto;
+            background: var(--glass-bg, rgba(255, 255, 255, 0.45));
+            backdrop-filter: var(--glass-blur, blur(12px));
+            -webkit-backdrop-filter: var(--glass-blur, blur(12px));
+            border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.3));
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--glass-shadow, 0 8px 32px 0 rgba(31, 38, 135, 0.08));
+        }
+
+        .booking-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .booking-header h1 {
+            color: var(--color-secondary, #4d8ac6);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-family: var(--font-titles, sans-serif);
+        }
+
+        .booking-header p {
+            color: var(--color-neutral-dark, #121212);
+            font-size: 1.05rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Arquitectura del Calendario Dinámico */
+        .calendar-wrapper {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        .calendar-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-navigation h3 {
+            margin: 0;
+            font-size: 1.3rem;
+            color: var(--color-neutral-dark, #121212);
+            font-weight: 600;
+            font-family: var(--font-titles, sans-serif);
+        }
+
+        .nav-btn {
+            background: var(--color-primary, #5a9c9b);
+            color: var(--color-neutral-light, #ffffff);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: var(--color-secondary, #4d8ac6);
+            transform: translateY(-1px);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .weekday-label {
+            font-weight: 700;
+            color: var(--color-primary, #5a9c9b);
+            font-size: 0.9rem;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: var(--color-neutral-dark, #121212);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .calendar-day:hover:not(.empty-day) {
+            background: var(--color-primary, #5a9c9b);
+            color: var(--color-neutral-light, #ffffff);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(90, 156, 155, 0.3);
+        }
+
+        .calendar-day.empty-day {
+            background: transparent;
+            border: none;
+            cursor: default;
+        }
+
+        .calendar-day.today {
+            border: 2px solid var(--color-secondary, #4d8ac6);
+            font-weight: 700;
+        }
+
+        /* Ventana Emergente Modal (Pop-up de Reserva) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .booking-modal {
+            background: var(--color-neutral-light, #ffffff);
+            width: 100%;
+            max-width: 550px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .modal-overlay.active .booking-modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--color-primary, #5a9c9b), var(--color-secondary, #4d8ac6));
+            color: var(--color-neutral-light, #ffffff);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .close-modal-btn {
+            background: transparent;
+            border: none;
+            color: var(--color-neutral-light, #ffffff);
+            font-size: 1.6rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        .close-modal-btn:hover {
+            opacity: 0.8;
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.88rem;
+            color: var(--color-neutral-dark, #121212);
+        }
+
+        .form-group select, 
+        .form-group input[type="time"], 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: var(--color-neutral-dark, #121212);
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            font-family: var(--font-body, Georgia, serif);
+            background-color: #fff;
+        }
+
+        .form-group select:focus, 
+        .form-group input[type="time"]:focus, 
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-primary, #5a9c9b);
+            box-shadow: 0 0 0 3px rgba(90, 156, 155, 0.15);
+        }
+
+        .language-pair-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .submit-booking-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--color-primary, #5a9c9b), var(--color-secondary, #4d8ac6));
+            color: var(--color-neutral-light, #ffffff);
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 12px rgba(90, 156, 155, 0.2);
+        }
+
+        .submit-booking-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        /* Fondo Decorativo */
+        .site-backdrop-bg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85vw;
+            height: 85vh;
+            max-width: 1080px;
+            max-height: 1080px;
+            background-image: url('site_logo.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+            opacity: 0.05;
+            filter: blur(1px);
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        @media (max-width: 768px) {
+            .booking-container {
+                padding: 20px;
+                margin: 20px 10px;
+            }
+            .language-pair-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+        /* Botón flotante de WhatsApp */
+/* ==========================================================================
+   Estilos para el Botón Flotante Dual de Contacto (Email / WhatsApp)
+   ========================================================================== */
+.contact-float-container {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  z-index: 1100;
+}
+
+.float-main-btn {
+  background-color: var(--color-primary, #5a9c9b);
+  color: #ffffff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(90, 156, 155, 0.4);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease;
+}
+
+.float-main-btn:hover {
+  background-color: var(--color-secondary, #4d8ac6);
+  transform: scale(1.1) rotate(5deg);
+}
+
+.float-options-menu {
+  position: absolute;
+  bottom: 75px;
+  right: 0;
+  background: var(--color-neutral-light, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 210px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.float-options-menu.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.float-option-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-family: var(--font-body, Georgia, serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-neutral-dark, #121212);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.float-option-item.whatsapp {
+  background-color: rgba(37, 211, 102, 0.1);
+  color: #128c7e;
+}
+
+.float-option-item.whatsapp:hover {
+  background-color: #25d366;
+  color: #ffffff;
+}
+
+.float-option-item.email {
+  background-color: rgba(77, 138, 198, 0.1);
+  color: var(--color-secondary, #4d8ac6);
+}
+
+.float-option-item.email:hover {
+  background-color: var(--color-secondary, #4d8ac6);
+  color: #ffffff;
+}
+    </style>
+</head>
+<body id="main-body">
+    <div class="site-backdrop-bg" aria-hidden="true"></div>
+
+    <header class="site-header navbar-container" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 1.5rem 2rem;">
+        <div class="logo-and-branding" style="display: flex; align-items: center; gap: 1rem;">
+            <a href="index.html" style="text-decoration: none;">
+                <img src="site_logo.png" alt="Cases Language Services Logo" class="main-logo" style="width: 50px; height: 50px; object-fit: cover; border-radius: 12px;">
+            </a>
+            <p class="motto" style="font-size: 0.95rem; font-style: italic; max-width: 400px; display: none;">
+                Conectando culturas y negocios a través del lenguaje.
+            </p>
+        </div>
+        <a href="index.html" class="btn-primary" style="padding: 10px 25px; font-size: 0.9rem;">Volver al Inicio</a>
+    </header>
+
+    <main class="container">
+        <div class="booking-container">
+            <div class="booking-header">
+                <h1>Reserva de Intérpretes Profesionales</h1>
+                <p>Planifique y asegure el éxito lingüístico de su evento. Haga clic en la fecha deseada dentro del calendario para iniciar su solicitud.</p>
+            </div>
+
+            <div class="calendar-wrapper">
+                <div class="calendar-navigation">
+                    <button class="nav-btn" id="prev-month-btn" aria-label="Mes anterior">◀ Anterior</button>
+                    <h3 id="calendar-month-year">Julio 2026</h3>
+                    <button class="nav-btn" id="next-month-btn" aria-label="Mes siguiente">Siguiente ▶</button>
+                </div>
+
+                <div class="calendar-grid" id="calendar-grid-container" role="grid" aria-label="Calendario de reservas">
+                    <!-- Generado dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="booking-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-date-title">
+        <div class="booking-modal">
+            <div class="modal-header">
+                <h2 id="modal-date-title">Solicitud de Intérprete</h2>
+                <button class="close-modal-btn" id="close-modal-btn" aria-label="Cerrar ventana">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="interpreter-booking-form">
+                    <input type="hidden" id="selected-event-date">
+
+                    <div class="form-group">
+                        <label for="event-type">Tipo de Evento:</label>
+                        <select id="event-type" required>
+                            <option value="" disabled selected>-- Seleccione una opción --</option>
+                            <option value="Conferencia Presencial">Conferencia Presencial</option>
+                            <option value="Videoconferencia / Reunión Virtual">Videoconferencia / Reunión Virtual</option>
+                            <option value="Reunión Corporativa">Reunión Corporativa</option>
+                            <option value="Evento Internacional / Cumbre">Evento Internacional / Cumbre</option>
+                            <option value="Otros Eventos Especiales">Otros Eventos Especiales</option>
+                        </select>
+                    </div>
+
+                    <div class="language-pair-grid">
+                        <div class="form-group">
+                            <label for="start-time">Hora de Inicio:</label>
+                            <input type="time" id="start-time" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end-time">Hora de Finalización:</label>
+                            <input type="time" id="end-time" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Combinación Lingüística (Language Pairs):</label>
+                        <div class="language-pair-grid">
+                            <div>
+                                <label style="font-size: 0.78rem; color: #555;" for="lang-from">Del Idioma:</label>
+                                <select id="lang-from" required>
+                                    <option value="" disabled selected>-- Origen --</option>
+                                    <option value="Español">Español</option>
+                                    <option value="Inglés">Inglés</option>
+                                    <option value="Alemán">Alemán</option>
+                                    <option value="Guaraní">Guaraní</option>
+                                    <option value="Chino Mandarín">Chino Mandarín</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.78rem; color: #555;" for="lang-to">Al Idioma:</label>
+                                <select id="lang-to" required>
+                                    <option value="" disabled selected>-- Destino --</option>
+                                    <option value="Español">Español</option>
+                                    <option value="Inglés">Inglés</option>
+                                    <option value="Alemán">Alemán</option>
+                                    <option value="Guaraní">Guaraní</option>
+                                    <option value="Chino Mandarín">Chino Mandarín</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additional-info">Detalles adicionales del Evento:</label>
+                        <textarea id="additional-info" rows="4" placeholder="Ej: Cantidad de asistentes, modalidad técnica requerida, variaciones temáticas, etc."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-booking-btn">Enviar Solicitud</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer glass-panel" style="margin-top: auto; padding: 2.5rem 2rem; border-radius: 24px 24px 0 0;">
+        <div class="container footer-content" style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <h4 style="color: var(--color-primary, #5a9c9b); margin-bottom: 0.5rem;">Cases Language Services</h4>
+            <p style="margin-bottom: 0.25rem;">📞 +595 973 793 110 | 📧 caseslanguages@gmail.com</p>
+            <p style="font-size: 0.875rem; color: #555;">&copy; 2026 Cases Language Services. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+<!-- Menú flotante dual de contacto (WhatsApp o Correo) -->
+<div class="contact-float-container">
+  <div class="float-options-menu" id="contact-options-menu">
+    <!-- Opción de WhatsApp con icono genérico de mensaje/chat -->
+<a href="#" id="floating-whatsapp-btn" class="float-option-item whatsapp" target="_blank" rel="noopener noreferrer">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+  </svg>
+  WhatsApp
+</a>
+    <a href="#" id="floating-email-btn" class="float-option-item email">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+      Correo Formal
+    </a>
+  </div>
+
+  <button class="float-main-btn hover-fx" id="float-toggle-btn" aria-label="Abrir opciones de contacto">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+      <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+    </svg>
+  </button>
+</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const monthYearDisplay = document.getElementById('calendar-month-year');
+            const gridContainer = document.getElementById('calendar-grid-container');
+            const prevBtn = document.getElementById('prev-month-btn');
+            const nextBtn = document.getElementById('next-month-btn');
+
+            const modalOverlay = document.getElementById('booking-modal-overlay');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const modalDateTitle = document.getElementById('modal-date-title');
+            const selectedDateInput = document.getElementById('selected-event-date');
+            const bookingForm = document.getElementById('interpreter-booking-form');
+
+            const langFrom = document.getElementById('lang-from');
+            const langTo = document.getElementById('lang-to');
+
+            // Estado inicial de la fecha (Julio 2026)
+            let currentDate = new Date(2026, 6, 1);
+
+            const meses = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
+                "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            
+            const diasSemana = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
+
+            function renderCalendar() {
+                if (!gridContainer || !monthYearDisplay) return;
+                gridContainer.innerHTML = '';
+                
+                monthYearDisplay.textContent = `${meses[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
+                diasSemana.forEach(dia => {
+                    const label = document.createElement('div');
+                    label.className = 'weekday-label';
+                    label.textContent = dia;
+                    gridContainer.appendChild(label);
+                });
+
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
+
+                const firstDayIndex = new Date(year, month, 1).getDay();
+                const totalDays = new Date(year, month + 1, 0).getDate();
+
+                for (let i = 0; i < firstDayIndex; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.className = 'calendar-day empty-day';
+                    gridContainer.appendChild(emptyDay);
+                }
+
+                for (let day = 1; day <= totalDays; day++) {
+                    const dayCell = document.createElement('div');
+                    dayCell.className = 'calendar-day';
+                    dayCell.textContent = day;
+
+                    if (year === 2026 && month === 10 && day === 12) {
+                        dayCell.classList.add('today');
+                    }
+
+                    dayCell.addEventListener('click', () => openBookingModal(day, month, year));
+                    gridContainer.appendChild(dayCell);
+                }
+            }
+
+            function openBookingModal(day, month, year) {
+                const formattedDate = `${day} de ${meses[month]}, ${year}`;
+                if (modalDateTitle) modalDateTitle.textContent = `Reservar Intérprete - ${formattedDate}`;
+                if (selectedDateInput) selectedDateInput.value = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                
+                if (bookingForm) bookingForm.reset();
+                if (modalOverlay) modalOverlay.classList.add('active');
+            }
+
+            function closeModal() {
+                if (modalOverlay) modalOverlay.classList.remove('active');
+            }
+
+            function validateLanguagePairs() {
+                if (langFrom && langTo && langFrom.value === langTo.value && langFrom.value !== "" && langTo.value !== "") {
+                    alert("Por favor, seleccione un par de idiomas diferente. El idioma de destino no puede ser idéntico al de origen.");
+                    langTo.value = "";
+                }
+            }
+
+            if (langFrom) langFrom.addEventListener('change', validateLanguagePairs);
+            if (langTo) langTo.addEventListener('change', validateLanguagePairs);
+
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() - 1);
+                    renderCalendar();
+                });
+            }
+
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    currentDate.setMonth(currentDate.getMonth() + 1);
+                    renderCalendar();
+                });
+            }
+
+            if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+            
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) closeModal();
+                });
+            }
+
+            if (bookingForm) {
+                bookingForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    const bookingData = {
+                        fecha: selectedDateInput ? selectedDateInput.value : '',
+                        tipoEvento: document.getElementById('event-type').value,
+                        horaInicio: document.getElementById('start-time').value,
+                        horaFin: document.getElementById('end-time').value,
+                        idiomaOrigen: langFrom ? langFrom.value : '',
+                        idiomaDestino: langTo ? langTo.value : '',
+                        infoAdicional: document.getElementById('additional-info').value
+                    };
+
+                    const emailDestino = "caseslanguages@gmail.com";
+                    const asunto = `Nueva Solicitud de Intérprete - CLS Booking (${bookingData.fecha})`;
+            
+                    const cuerpoMensaje = `Estimado equipo de Cases Language Services,
+
+Se ha generado una nueva solicitud de reserva de intérprete a través de la plataforma virtual. A continuación, los detalles del evento:
+
+• Fecha del Evento: ${bookingData.fecha}
+• Tipo de Evento: ${bookingData.tipoEvento}
+• Combinación Lingüística: ${bookingData.idiomaOrigen} ➔ ${bookingData.idiomaDestino}
+• Horario del Evento: ${bookingData.horaInicio} a ${bookingData.horaFin} hrs.
+
+Información adicional provista por el solicitante:
+"${bookingData.infoAdicional || 'Sin comentarios adicionales.'}"
+
+Atentamente,
+Sistema de Reservas Automáticas CLS`;
+
+                    const mailtoUrl = `mailto:${emailDestino}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpoMensaje)}`;
+                    window.location.href = mailtoUrl;
+
+                    alert(`¡Solicitud Registrada!\n\nSe está abriendo su cliente de correo electrónico para enviar los detalles del evento a ${emailDestino}.`);
+                    closeModal();
+                });
+            }
+
+            renderCalendar();
+
+         initAutoHidingHeader();
+        });
+        function initAutoHidingHeader() {
+  const header = document.querySelector('.navbar-container');
+  if (!header) return;
+
+  let lastScrollTop = 0;
+  const delta = 5; // Margen mínimo de desplazamiento para activar la acción
+  const navbarHeight = header.offsetHeight;
+
+  window.addEventListener('scroll', () => {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Asegurar que el scroll supere el margen mínimo (delta)
+    if (Math.abs(lastScrollTop - scrollTop) <= delta) return;
+
+    if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+      // Scroll hacia ABAJO -> Ocultar header
+      header.classList.add('header-hidden');
+    } else {
+      // Scroll hacia ARRIBA -> Mostrar header
+      header.classList.remove('header-hidden');
+    }
+
+    lastScrollTop = scrollTop;
+  }, { passive: true });
+}
+// Control del menú flotante de contacto dual (WhatsApp / Email)
+            const floatToggleBtn = document.getElementById('float-toggle-btn');
+            const contactOptionsMenu = document.getElementById('contact-options-menu');
+            const floatingWhatsappBtn = document.getElementById('floating-whatsapp-btn');
+            const floatingEmailBtn = document.getElementById('floating-email-btn');
+
+            if (floatToggleBtn && contactOptionsMenu) {
+                floatToggleBtn.addEventListener('click', () => {
+                    contactOptionsMenu.classList.toggle('active');
+                });
+
+                // Cerrar menú al hacer clic fuera
+                document.addEventListener('click', (e) => {
+                    if (!floatToggleBtn.contains(e.target) && !contactOptionsMenu.contains(e.target)) {
+                        contactOptionsMenu.classList.remove('active');
+                    }
+                });
+            }
+
+            // Actualizar enlace de WhatsApp flotante con mensaje formal predeterminado
+            const numeroWhatsApp = "595973793110"; // Número corporativo
+            const mensajeFormalWhatsApp = "Estimado equipo de Cases Language Services,\n\nDeseo agendar una cita o solicitar información detallada sobre sus servicios de traducción e interpretación.\n\nQuedo atento a su respuesta.\nAtentamente.";
+            if (floatingWhatsappBtn) {
+                floatingWhatsappBtn.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensajeFormalWhatsApp)}`;
+            }
+
+            if (floatingEmailBtn) {
+                floatingEmailBtn.href = `mailto:caseslanguages@gmail.com?subject=${encodeURIComponent("Consulta General - Cases Language Services")}&body=${encodeURIComponent(mensajeFormalWhatsApp)}`;
+            }
+
+    </script>
+</body>
+</html>
