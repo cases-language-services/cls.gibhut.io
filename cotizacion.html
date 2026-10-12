@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Cases Language Services - Calculadora de precios por servicio: traducción, interpretación, transcripción, desarrollo web y cursos de idiomas." />
+    <title>Cases Language Services | Cotización</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ==========================================================================
+           Design Tokens & Variables (PRD 5.1)
+           ========================================================================== */
+        :root {
+            /* Color Palette */
+            --color-primary: #5a9c9b;
+            /* Teal */
+            --color-secondary: #4d8ac6;
+            /* Blue */
+            --color-accent: #f5b041;
+            /* Golden Yellow */
+            --color-neutral-dark: #121212;
+            /* Neutral Black */
+            --color-neutral-light: #ffffff;
+            /* Neutral White */
+
+            /* Glassmorphism Configuration */
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-blur: blur(12px);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+
+            /* Typography */
+            --font-titles: "Lora", "Lora", sans-serif;
+            --font-body: "Lora", Georgia, serif;
+        }
+
+        /* Screen reader utility for accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Base Styles */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--color-neutral-dark);
+            background: linear-gradient(135deg, #f0f4f8 0%, #e1e9f0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glassmorphism System */
+        .glass-panel,
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Navigation Menu (PRD 4.1) */
+        .navbar-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 2rem;
+            border-radius: 16px;
+        }
+
+        .brand-logo {
+            font-family: var(--font-titles);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-neutral-dark);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-secondary);
+        }
+
+        .nav-link:focus-visible,
+        .brand-logo:focus-visible,
+        .btn-primary:focus-visible,
+        .btn-calculate:focus-visible,
+        .btn-service:focus-visible,
+        .lang-dropdown:focus-visible,
+        .social-links a:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 3px;
+        }
+
+        .lang-dropdown {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-primary);
+            background-color: var(--color-neutral-light);
+            color: var(--color-neutral-dark);
+            cursor: pointer;
+        }
+
+        /* Hero Section (PRD 4.2) */
+        .hero-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1 1 400px;
+        }
+
+        .motto {
+            font-family: var(--font-titles);
+            font-size: 32px;
+            font-weight: bold;
+            line-height: 1.3;
+            color: var(--color-neutral-dark);
+            margin-bottom: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        /* Primary Action Button */
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--color-primary);
+            color: var(--color-neutral-light);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            border: none;
+            box-shadow: 0 4px 15px rgba(90, 156, 155, 0.4);
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-secondary);
+        }
+
+        /* Hero Image Container */
+        .hero-image-wrapper {
+            flex: 0 0 480px;
+            max-width: 100%;
+        }
+
+        .hero-logo {
+            width: 480px;
+            height: 480px;
+            object-fit: cover;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        /* Calculator Sections */
+        .info-section {
+            padding: 3rem 2rem 5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            padding: 2.5rem;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-title {
+            font-family: var(--font-body);
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--color-accent);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .card-text {
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--color-neutral-dark);
+        }
+
+        /* Form styles */
+        .service-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .service-group label {
+            display: block;
+            font-weight: 700;
+            margin-top: 0.5rem;
+            color: var(--color-neutral-dark);
+        }
+
+        .service-group select,
+        .service-group input[type="number"],
+        .service-group input[type="range"] {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-primary);
+            background-color: var(--color-neutral-light);
+            color: var(--color-neutral-dark);
+            width: 100%;
+            max-width: 300px;
+            margin-top: 0.25rem;
+        }
+
+        .service-group input[type="range"] {
+            padding: 0;
+            border: none;
+            background: transparent;
+            accent-color: var(--color-primary);
+        }
+
+        .service-group .range-value {
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .service-group .checkbox-group {
+            margin-top: 0.5rem;
+        }
+
+        .service-group .checkbox-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: normal;
+            margin-right: 1rem;
+        }
+
+        /* Service individual result */
+        .service-result {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 12px;
+            background: rgba(90, 156, 155, 0.12);
+            border: 1px solid var(--color-primary);
+            text-align: center;
+            font-weight: bold;
+            color: var(--color-neutral-dark);
+            display: none;
+        }
+
+        .service-result .price {
+            font-size: 1.8rem;
+            color: var(--color-primary);
+        }
+
+        .btn-service {
+            background-color: var(--color-primary);
+            color: var(--color-neutral-light);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(90, 156, 155, 0.3);
+            transition: background-color 0.3s ease;
+            margin-top: 0.75rem;
+            align-self: flex-start;
+        }
+
+        .btn-service:hover {
+            background-color: var(--color-secondary);
+        }
+
+        /* Global result */
+        .result-box {
+            padding: 2rem;
+            margin-top: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        .result-box h3 {
+            font-family: var(--font-titles);
+            font-size: 1.5rem;
+            color: var(--color-secondary);
+        }
+
+        .result-box .total-price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin: 0.5rem 0;
+        }
+
+        .btn-calculate {
+            background-color: var(--color-secondary);
+            color: var(--color-neutral-light);
+            font-family: var(--font-body);
+            font-size: 1.2rem;
+            font-weight: bold;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(77, 138, 198, 0.4);
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-calculate:hover {
+            background-color: var(--color-primary);
+        }
+
+        /* Footer Section */
+        .site-footer {
+            margin-top: auto;
+            padding: 2.5rem 2rem;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-heading {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-contact a,
+        .social-links a {
+            color: var(--color-neutral-dark);
+            text-decoration: none;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            font-size: 0.875rem;
+        }
+/* Botón flotante de WhatsApp */
+.whatsapp-float {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #25d366;
+  color: #ffffff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  z-index: 1100;
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease;
+}
+
+.whatsapp-float:hover {
+  background-color: #20ba5a;
+  transform: scale(1.1) rotate(5deg);
+}
+
+        /* Hardware Acceleration Class for JS Interactions */
+        .hover-fx {
+            will-change: transform;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+        }
+
+        /* Responsive Overrides */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-container {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem 1.5rem;
+            }
+
+            .hero-image-wrapper {
+                flex: 0 1 100%;
+            }
+
+            .hero-logo {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 1 / 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+
+            .hover-fx {
+                will-change: auto;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-container">
+        <nav class="navbar glass-panel" aria-label="Navegación principal">
+            <a href="index.html" class="brand-logo" aria-label="Página de inicio de Cases Language Services">
+                Cases Language Services EAS
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="nosotros.html" class="nav-link hover-fx">Nosotros</a></li>
+                <li><a href="servicios.html" class="nav-link hover-fx">Servicios</a></li>
+                <li><a href="idiomas.html" class="nav-link hover-fx">Idiomas</a></li>
+                <li><a href="contactenos.html" class="nav-link hover-fx">Contáctenos</a></li>
+            </ul>
+
+            <div class="lang-switch-wrapper">
+                <label for="lang-select" class="sr-only">Seleccionar idioma</label>
+                <select id="lang-select" class="lang-dropdown hover-fx" aria-label="Cambiar idioma">
+                    <option value="es" selected>Español</option>
+                    <option value="en">English</option>
+                    <option value="gn">Avañe'ẽ</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </div>
+                        <div class="currency-switch-wrapper" style="margin-left: 1.5rem;">
+                <label for="currency-select" class="sr-only">Seleccionar moneda</label>
+                <select id="currency-select" class="lang-dropdown hover-fx" aria-label="Cambiar moneda">
+                    <option value="USD" selected>$ USD</option>
+                    <option value="EUR">€ EUR</option>
+                    <option value="PYG">₲ PYG</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <p class="hero-subtitle">Transparencia</p>
+                    <h1 class="motto">Cotizá tu proyecto lingüístico</h1>
+                    <p style="font-size:1.1rem; margin-bottom:2rem; max-width:540px;">
+                        La transparencia es uno de nuestros valores más importantes. Por eso, te brindamos una calculadora de precios <strong>transparente y precisa</strong> para nuestros servicios de traducción, interpretación, transcripción, desarrollo web y cursos de idiomas.
+                    </p>
+                </div>
+                <div class="hero-image-wrapper">
+                    <img src="site_logo.png"
+                    alt="Logo de Cases Language Services"
+                    class="hero-logo"
+                    width="480"
+                    height="480" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Calculator Section -->
+        <section class="info-section" id="calculator-section">
+            <div class="cards-grid">
+
+                <!-- 1. Document Translation -->
+                <article class="card glass-card hover-fx service-group">
+                    <h2 class="card-title">📄 Traducción de documentos</h2>
+                    <label for="translation-type">Tipo de traducción:</label>
+                    <select id="translation-type">
+                        <option value="general">General</option>
+                        <option value="legal">Legal</option>
+                    </select>
+                    <label for="words">Número de palabras:</label>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <input type="range" id="words" min="100" max="10000" step="100" value="500" />
+                        <span class="range-value" id="words-display">500</span>
+                    </div>
+                    <button type="button" class="btn-service hover-fx" data-service="translation">Calcular este servicio</button>
+                    <div class="service-result" id="translation-result">
+                        Costo estimado: <span class="price" id="translation-price">$0.00</span>
+                    </div>
+                </article>
+
+                <!-- 2. Interpreting Services -->
+                <article class="card glass-card hover-fx service-group">
+                    <h2 class="card-title">🎤 Interpretación</h2>
+                    <label for="interpreting-type">Modalidad:</label>
+                    <select id="interpreting-type">
+                        <option value="personal">Personal</option>
+                        <option value="conference">Conferencias</option>
+                    </select>
+                    <label for="hours">Horas requeridas:</label>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <input type="range" id="hours" min="1" max="24" step="1" value="2" />
+                        <span class="range-value" id="hours-display">2</span>
+                    </div>
+                    <button type="button" class="btn-service hover-fx" data-service="interpreting">Calcular este servicio</button>
+                    <div class="service-result" id="interpreting-result">
+                        Costo estimado: <span class="price" id="interpreting-price">$0.00</span>
+                    </div>
+                </article>
+
+                <!-- 3. Multimedia Transcription -->
+                <article class="card glass-card hover-fx service-group">
+                    <h2 class="card-title">🎧 Transcripción multimedia</h2>
+                    <label for="transcription-type">Duración:</label>
+                    <select id="transcription-type">
+                        <option value="short">Corta (menos de 59 min)</option>
+                        <option value="long">Larga (más de 1 hora)</option>
+                    </select>
+                    <!-- Placeholder div needed by the Reset button to avoid JS errors -->
+                    <div id="transcription-long-options" style="display: none;"></div>
+                    <!-- Single slider container that dynamically adjusts labels and limits -->
+                    <div id="transcription-slider-container">
+                        <label id="transcription-slider-label" for="audio-hours">Minutos de audio:</label>
+                        <div style="display:flex; align-items:center; gap:1rem;">
+                            <input type="range" id="audio-hours" min="1" max="60" step="1" value="10" />
+                            <span class="range-value" id="audio-hours-display">10</span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-service hover-fx" data-service="transcription">Calcular este servicio</button>
+                    <div class="service-result" id="transcription-result">
+                        Costo estimado: <span class="price" id="transcription-price">$0.00</span>
+                    </div>
+                </article>
+
+                <!-- 4. Website Development (AI-assisted) -->
+                <article class="card glass-card hover-fx service-group">
+                    <h2 class="card-title">🌐 Desarrollo web con IA</h2>
+                    <label for="website-plan">Plan:</label>
+                    <select id="website-plan">
+                        <option value="basic">Económico (Homepage)</option>
+                        <option value="standard">Estándar (Homepage, 1-3 secciones)</option>
+                        <option value="premium">Premium (Homepage, 4-10 secciones)</option>
+                    </select>
+                    <button type="button" class="btn-service hover-fx" data-service="website">Calcular este servicio</button>
+                    <div class="service-result" id="website-result">
+                        Costo estimado: <span class="price" id="website-price">$0.00</span>
+                    </div>
+                </article>
+
+                <!-- 5. Basic Foreign Language Courses -->
+                <article class="card glass-card hover-fx service-group">
+                    <h2 class="card-title">🗣️ Cursos de idiomas</h2>
+                    <label for="course-level">Nivel:</label>
+                    <select id="course-level">
+                        <option value="a1">Básico</option>
+                        <option value="b1">Intermedio</option>
+                        <option value="c1">Avanzado</option>
+                    </select>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" id="course-presencial" />
+                            Modalidad presencial (+$50)
+                        </label>
+                    </div>
+                    <button type="button" class="btn-service hover-fx" data-service="courses">Calcular este servicio</button>
+                    <div class="service-result" id="courses-result">
+                        Costo estimado: <span class="price" id="courses-price">$0.00</span>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- Global Calculate & Reset -->
+            <div style="text-align:center; margin-top:2rem;">
+                <button type="button" id="calculate-total-btn" class="btn-calculate hover-fx">Calcular total</button>
+                <button type="button" id="reset-all-btn" class="btn-primary hover-fx" style="margin-left:1rem;">Reiniciar todo</button>
+            </div>
+
+            <div id="total-result-box" class="result-box" style="display:none;">
+                <h3>Total estimado</h3>
+                <div class="total-price" id="total-price">$0.00</div>
+                <p style="margin-top:0.5rem; font-size:0.9rem; color:var(--color-neutral-dark);">
+                    * Los precios incluyen impuestos aplicables. El costo final puede variar según requerimientos específicos.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer glass-panel">
+        <div class="footer-container">
+            <div class="footer-contact">
+                <h3 class="footer-heading">Contacto</h3>
+                <p>Email: <a href="mailto:info@caseslanguages.com">info@caseslanguages.com</a></p>
+                <p>Teléfono: +1 (555) 019-2834</p>
+            </div>
+
+            <div class="footer-social">
+                <h3 class="footer-heading">Síguenos</h3>
+                <div class="social-links">
+                    <a href="#" class="social-link hover-fx" aria-label="LinkedIn">LinkedIn</a>
+                    <a href="#" class="social-link hover-fx" aria-label="X (Twitter)">X</a>
+                    <a href="#" class="social-link hover-fx" aria-label="Instagram">Instagram</a>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <p>&copy; 2026 Cases Language Services. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+<!-- Burbuja flotante de WhatsApp -->
+<a href="https://wa.me/5950973793110?text=Hola,%20deseo%20agendar%20una%20cita%20por%20vídeollamada%20con%20un%20representante." 
+   class="whatsapp-float hover-fx" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   aria-label="Chatear por WhatsApp con un representante">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+  </svg>
+</a>
+
+    <script>
+        /**
+         * Modern 2026 UI FX Controller (unchanged)
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            init3DHoverEffect();
+            initCalculator();
+        });
+
+        function init3DHoverEffect() {
+            const interactiveElements = document.querySelectorAll('.hover-fx');
+
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return;
+            }
+
+            interactiveElements.forEach((element) => {
+                element.addEventListener('mousemove', (e) => handleTilt(e, element));
+                element.addEventListener('mouseleave', () => resetTilt(element));
+            });
+        }
+
+        function handleTilt(event, element) {
+            const rect = element.getBoundingClientRect();
+
+            if (!rect.width || !rect.height) {
+                return;
+            }
+
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const maxTilt = 8;
+
+            const tiltX = ((y - centerY) / centerY) * -maxTilt;
+            const tiltY = ((x - centerX) / centerX) * maxTilt;
+
+            if (element._tiltFrame) {
+                cancelAnimationFrame(element._tiltFrame);
+            }
+
+            element._tiltFrame = requestAnimationFrame(() => {
+                element.style.transform =
+                    `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) translateZ(8px)`;
+                element._tiltFrame = null;
+            });
+        }
+
+        function resetTilt(element) {
+            if (element._tiltFrame) {
+                cancelAnimationFrame(element._tiltFrame);
+                element._tiltFrame = null;
+            }
+
+            requestAnimationFrame(() => {
+                element.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+            });
+        }
+
+        // ========== CURRENCY TOGGLE CONFIGURATION ==========
+        const CURRENCY_RATES = { USD: 1, EUR: 0.85, PYG: 6000 };
+        const CURRENCY_SYMBOLS = { USD: '$', EUR: '€', PYG: '₲' };
+
+        // Base USD prices for updating dropdown labels
+        const BASE_PRICES = {
+            'translation-type': { general: 0.06, legal: 0.10 },
+            'interpreting-type': { personal: 14.14, conference: 24.56 },
+            'transcription-type': { short: 0.59, long: 35.35 },
+            'website-plan': { basic: 315.10, standard: 629.00, premium: 944.10 },
+            'course-level': { a1: 192.39, b1: 288.59, c1: 432.88 }
+        };
+
+        const LABEL_PREFIXES = {
+            'translation-type': { general: 'General', legal: 'Legal' },
+            'interpreting-type': { personal: 'Personal', conference: 'Conferencia' },
+            'transcription-type': { short: 'Corta (menos de 59 min)', long: 'Larga (más de 1 hora)' },
+            'website-plan': { basic: 'Económico (Homepage)', standard: 'Estándar (Homepage, 1-3 secciones)', premium: 'Premium (Homepage, 4-10 secciones)' },
+            'course-level': { a1: 'Básico', b1: 'Intermedio', c1: 'Avanzado' }
+        };
+
+        const LABEL_SUFFIXES = {
+            'translation-type': { general: '/palabra', legal: '/palabra' },
+            'interpreting-type': { personal: '/hora', conference: '/hora' },
+            'transcription-type': { short: '/minuto', long: '/hora' },
+            'website-plan': { basic: '', standard: '', premium: '' },
+            'course-level': { a1: '', b1: '', c1: '' }
+        };
+
+        function formatCurrency(amount) {
+            const currency = document.getElementById('currency-select').value;
+            const symbol = CURRENCY_SYMBOLS[currency];
+            if (currency === 'PYG') {
+                return symbol + Math.round(amount);
+            }
+            return symbol + amount.toFixed(2);
+        }
+
+        function updateDropdownLabels() {
+            const rate = CURRENCY_RATES[document.getElementById('currency-select').value];
+            for (const [selectId, priceMap] of Object.entries(BASE_PRICES)) {
+                const select = document.getElementById(selectId);
+                for (const [value, basePrice] of Object.entries(priceMap)) {
+                    const option = select.querySelector(`option[value="${value}"]`);
+                    if (option) {
+                        const prefix = LABEL_PREFIXES[selectId][value];
+                        const suffix = LABEL_SUFFIXES[selectId][value];
+                        const converted = basePrice * rate;
+                        const formatted = formatCurrency(converted);
+                        option.textContent = `${prefix} – ${formatted}${suffix}`;
+                    }
+                }
+            }
+        }
+
+        function refreshAllDisplayedPrices() {
+            const rate = CURRENCY_RATES[document.getElementById('currency-select').value];
+            const resultIds = ['translation', 'interpreting', 'transcription', 'website', 'courses'];
+            const calcFunctions = [calculateTranslation, calculateInterpreting, calculateTranscription, calculateWebsite, calculateCourses];
+
+            for (let i = 0; i < resultIds.length; i++) {
+                const resultDiv = document.getElementById(resultIds[i] + '-result');
+                if (resultDiv.style.display !== 'none') {
+                    const usdPrice = calcFunctions[i]();
+                    document.getElementById(resultIds[i] + '-price').textContent = formatCurrency(usdPrice * rate);
+                }
+            }
+
+            const totalBox = document.getElementById('total-result-box');
+            if (totalBox.style.display !== 'none') {
+                const totalUSD = calculateTranslation() + calculateInterpreting() + calculateTranscription() + calculateWebsite() + calculateCourses();
+                document.getElementById('total-price').textContent = formatCurrency(totalUSD * rate);
+            }
+        }
+
+        // ========== CALCULATOR LOGIC ==========
+        function initCalculator() {
+            // Update range displays
+            const wordsRange = document.getElementById('words');
+            const wordsDisplay = document.getElementById('words-display');
+            wordsRange.addEventListener('input', () => { wordsDisplay.textContent = wordsRange.value; });
+
+            const hoursRange = document.getElementById('hours');
+            const hoursDisplay = document.getElementById('hours-display');
+            hoursRange.addEventListener('input', () => { hoursDisplay.textContent = hoursRange.value; });
+
+            // Update transcription slider dynamically for minutes/hours
+            const audioHoursRange = document.getElementById('audio-hours');
+            const audioHoursDisplay = document.getElementById('audio-hours-display');
+            const sliderLabel = document.getElementById('transcription-slider-label');
+            const transcriptionType = document.getElementById('transcription-type');
+
+            audioHoursRange.addEventListener('input', () => { audioHoursDisplay.textContent = audioHoursRange.value; });
+
+            transcriptionType.addEventListener('change', () => {
+                if (transcriptionType.value === 'short') {
+                    sliderLabel.textContent = 'Minutos de audio:';
+                    audioHoursRange.min = 1;
+                    audioHoursRange.max = 60;
+                    audioHoursRange.step = 1;
+                    // Clamp current value to new max
+                    if (parseInt(audioHoursRange.value) > 60) audioHoursRange.value = 60;
+                    if (parseInt(audioHoursRange.value) < 1) audioHoursRange.value = 1;
+                } else { // long
+                    sliderLabel.textContent = 'Horas de audio:';
+                    audioHoursRange.min = 1;
+                    audioHoursRange.max = 24;
+                    audioHoursRange.step = 1;
+                    if (parseInt(audioHoursRange.value) > 24) audioHoursRange.value = 24;
+                    if (parseInt(audioHoursRange.value) < 1) audioHoursRange.value = 1;
+                }
+                audioHoursDisplay.textContent = audioHoursRange.value;
+            });
+            // Initialize slider config based on current selection
+            if (transcriptionType.value === 'short') {
+                sliderLabel.textContent = 'Minutos de audio:';
+                audioHoursRange.min = 1;
+                audioHoursRange.max = 60;
+                audioHoursRange.step = 1;
+            } else {
+                sliderLabel.textContent = 'Horas de audio:';
+                audioHoursRange.min = 1;
+                audioHoursRange.max = 24;
+                audioHoursRange.step = 1;
+            }
+
+            // Currency toggle logic
+            const currencySelect = document.getElementById('currency-select');
+            currencySelect.addEventListener('change', () => {
+                updateDropdownLabels();
+                refreshAllDisplayedPrices();
+            });
+            // Initialize dropdowns with USD labels
+            updateDropdownLabels();
+
+            // Individual service calculation functions
+            function calculateTranslation() {
+                const type = document.getElementById('translation-type').value;
+                const words = parseInt(document.getElementById('words').value);
+                const rate = type === 'general' ? 0.06 : 0.10;
+                return words * rate;
+            }
+
+            function calculateInterpreting() {
+                const type = document.getElementById('interpreting-type').value;
+                const hours = parseInt(document.getElementById('hours').value);
+                const rate = type === 'personal' ? 14.14 : 24.56;
+                return hours * rate;
+            }
+
+            function calculateTranscription() {
+            const type = document.getElementById('transcription-type').value;
+            const value = parseInt(document.getElementById('audio-hours').value, 10);
+
+            if (type === 'short') {
+                return value * 0.59; // $0.59 por minuto
+            } else { // long
+                return value * 35.35; // $35.35 por hora
+            }
+            }
+
+            function calculateWebsite() {
+                const plan = document.getElementById('website-plan').value;
+                if (plan === 'basic') return 315.10;
+                if (plan === 'standard') return 629.00;
+                if (plan === 'premium') return 944.10;
+            }
+
+            function calculateCourses() {
+                const level = document.getElementById('course-level').value;
+                let price = 0;
+                if (level === 'a1') price = 192.39;
+                else if (level === 'b1') price = 288.59;
+                else if (level === 'c1') price = 432.88;
+                const presencial = document.getElementById('course-presencial').checked;
+                if (presencial) price += 50;
+                return price;
+            }
+
+            // Update individual service results
+            function updateServiceResult(serviceId, priceElementId, resultDivId, calculatorFn) {
+                const usdPrice = calculatorFn();
+                const rate = CURRENCY_RATES[document.getElementById('currency-select').value];
+                document.getElementById(priceElementId).textContent = formatCurrency(usdPrice * rate);
+                const resultDiv = document.getElementById(resultDivId);
+                resultDiv.style.display = 'block';
+                return usdPrice;
+            }
+
+            // Attach event listeners to individual buttons
+            document.querySelectorAll('.btn-service').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const service = this.dataset.service;
+                    let price = 0;
+                    switch (service) {
+                        case 'translation':
+                            price = updateServiceResult('translation', 'translation-price', 'translation-result', calculateTranslation);
+                            break;
+                        case 'interpreting':
+                            price = updateServiceResult('interpreting', 'interpreting-price', 'interpreting-result', calculateInterpreting);
+                            break;
+                        case 'transcription':
+                            price = updateServiceResult('transcription', 'transcription-price', 'transcription-result', calculateTranscription);
+                            break;
+                        case 'website':
+                            price = updateServiceResult('website', 'website-price', 'website-result', calculateWebsite);
+                            break;
+                        case 'courses':
+                            price = updateServiceResult('courses', 'courses-price', 'courses-result', calculateCourses);
+                            break;
+                    }
+                });
+            });
+
+            // Global total calculation
+            const totalBtn = document.getElementById('calculate-total-btn');
+            const totalResultBox = document.getElementById('total-result-box');
+            const totalPriceDisplay = document.getElementById('total-price');
+
+            totalBtn.addEventListener('click', function() {
+                const totalUSD = calculateTranslation() +
+                calculateInterpreting() +
+                calculateTranscription() +
+                calculateWebsite() +
+                calculateCourses();
+                const rate = CURRENCY_RATES[document.getElementById('currency-select').value];
+                totalPriceDisplay.textContent = formatCurrency(totalUSD * rate);
+                totalResultBox.style.display = 'block';
+                totalResultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+            // Reset everything
+            const resetBtn = document.getElementById('reset-all-btn');
+            resetBtn.addEventListener('click', function() {
+                // Reset form controls
+                document.getElementById('translation-type').value = 'general';
+                document.getElementById('words').value = 500;
+                document.getElementById('words-display').textContent = '500';
+
+                document.getElementById('interpreting-type').value = 'personal';
+                document.getElementById('hours').value = 2;
+                document.getElementById('hours-display').textContent = '2';
+
+                document.getElementById('transcription-type').value = 'short';
+                document.getElementById('audio-hours').value = 2;
+                document.getElementById('audio-hours-display').textContent = '2';
+                document.getElementById('transcription-long-options').style.display = 'none';
+
+                document.getElementById('website-plan').value = 'basic';
+
+                document.getElementById('course-level').value = 'a1';
+                document.getElementById('course-presencial').checked = false;
+
+                // Reset currency to USD and update labels
+                document.getElementById('currency-select').value = 'USD';
+                updateDropdownLabels();
+                refreshAllDisplayedPrices();
+
+                // Hide all service results
+                document.querySelectorAll('.service-result').forEach(el => el.style.display = 'none');
+                // Hide total result
+                totalResultBox.style.display = 'none';
+                // Scroll to top of calculator
+                document.getElementById('calculator-section').scrollIntoView({ behavior: 'smooth' });
+            });
+        }
+    </script>
+</body>
+</html>

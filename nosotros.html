@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Cases Language Services - Conozca nuestro equipo, nuestra historia y nuestra pasión por la traducción y localización." />
+    <title>Cases Language Services | Nosotros</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ==========================================================================
+           Design Tokens & Variables (PRD 5.1)
+           ========================================================================== */
+        :root {
+            /* Color Palette */
+            --color-primary: #5a9c9b;
+            /* Teal */
+            --color-secondary: #4d8ac6;
+            /* Blue */
+            --color-accent: #f5b041;
+            /* Golden Yellow */
+            --color-neutral-dark: #121212;
+            /* Neutral Black */
+            --color-neutral-light: #ffffff;
+            /* Neutral White */
+
+            /* Glassmorphism Configuration */
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --glass-blur: blur(12px);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
+
+            /* Typography */
+            --font-titles: "Lora", "Lora", sans-serif;
+            --font-body: "Lora", Georgia, serif;
+        }
+
+        /* Screen reader utility for accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Base Styles */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--color-neutral-dark);
+            background: linear-gradient(135deg, #f0f4f8 0%, #e1e9f0 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glassmorphism System */
+        .glass-panel,
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow);
+        }
+
+        /* Navigation Menu (PRD 4.1) */
+        .navbar-container {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 2rem;
+            border-radius: 16px;
+        }
+
+        .brand-logo {
+            font-family: var(--font-titles);
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--color-neutral-dark);
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--color-secondary);
+        }
+
+        .nav-link:focus-visible,
+        .brand-logo:focus-visible,
+        .btn-primary:focus-visible,
+        .lang-dropdown:focus-visible,
+        .social-links a:focus-visible {
+            outline: 3px solid var(--color-accent);
+            outline-offset: 3px;
+        }
+
+        .lang-dropdown {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            border: 1px solid var(--color-primary);
+            background-color: var(--color-neutral-light);
+            color: var(--color-neutral-dark);
+            cursor: pointer;
+        }
+
+        /* Hero Section (PRD 4.2) */
+        .hero-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-content {
+            flex: 1 1 400px;
+        }
+
+        .motto {
+            font-family: var(--font-titles);
+            font-size: 32px;
+            font-weight: bold;
+            line-height: 1.3;
+            color: var(--color-neutral-dark);
+            margin-bottom: 2rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--color-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        /* Primary Action Button */
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--color-primary);
+            color: var(--color-neutral-light);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: bold;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            border: none;
+            box-shadow: 0 4px 15px rgba(90, 156, 155, 0.4);
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-secondary);
+        }
+
+        /* Hero Image Container */
+        .hero-image-wrapper {
+            flex: 0 0 480px;
+            max-width: 100%;
+        }
+
+        .hero-logo {
+            width: 480px;
+            height: 480px;
+            object-fit: cover;
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
+
+        /* Information Sections */
+        .info-section {
+            padding: 3rem 2rem 5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            padding: 2.5rem;
+            border-radius: 20px;
+        }
+
+        .card-title {
+            font-family: var(--font-body);
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--color-secondary);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--color-accent);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .card-text {
+            font-family: var(--font-body);
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--color-neutral-dark);
+        }
+
+        .values-list {
+            list-style: none;
+        }
+
+        .values-list li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Team / Stats specific */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+        }
+
+        .stat-number {
+            font-family: var(--font-titles);
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--color-neutral-dark);
+            margin-top: 0.25rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-member {
+            padding: 1.5rem;
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .team-name {
+            font-family: var(--font-titles);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin-top: 0.75rem;
+        }
+
+        .team-role {
+            font-size: 0.95rem;
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        .team-bio {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            color: var(--color-neutral-dark);
+        }
+
+        /* Footer Section */
+        .site-footer {
+            margin-top: auto;
+            padding: 2.5rem 2rem;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-heading {
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--color-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-contact a,
+        .social-links a {
+            color: var(--color-neutral-dark);
+            text-decoration: none;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-copyright {
+            width: 100%;
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            font-size: 0.875rem;
+        }
+/* Botón flotante de WhatsApp */
+.whatsapp-float {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background-color: #25d366;
+  color: #ffffff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+  z-index: 1100;
+  text-decoration: none;
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.3s ease;
+}
+
+.whatsapp-float:hover {
+  background-color: #20ba5a;
+  transform: scale(1.1) rotate(5deg);
+}
+
+        /* Hardware Acceleration Class for JS Interactions */
+        .hover-fx {
+            will-change: transform;
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+        }
+
+        /* Responsive Overrides */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-container {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem 1.5rem;
+            }
+
+            .hero-image-wrapper {
+                flex: 0 1 100%;
+            }
+
+            .hero-logo {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 1 / 1;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+            }
+
+            .hover-fx {
+                will-change: auto;
+                transform: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar-container">
+        <nav class="navbar glass-panel" aria-label="Navegación principal">
+            <a href="index.html" class="brand-logo" aria-label="Página de inicio de Cases Language Services">
+                Cases Language Services
+            </a>
+
+            <ul class="nav-menu">
+                <li><a href="nosotros.html" class="nav-link hover-fx" aria-current="page">Nosotros</a></li>
+                <li><a href="servicios.html" class="nav-link hover-fx">Servicios</a></li>
+                <li><a href="idiomas.html" class="nav-link hover-fx">Idiomas</a></li>
+                <li><a href="contactenos.html" class="nav-link hover-fx">Contáctenos</a></li>
+            </ul>
+
+            <div class="lang-switch-wrapper">
+                <label for="lang-select" class="sr-only">Seleccionar idioma</label>
+                <select id="lang-select" class="lang-dropdown hover-fx" aria-label="Cambiar idioma">
+                    <option value="es" selected>Español</option>
+                    <option value="en">English</option>
+                    <option value="gn">Avañe'ẽ</option>
+                    <option value="de">Deutsch</option>
+                </select>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <p class="hero-subtitle">Compromiso | Puntualidad</p>
+                    <h1 class="motto">Tu mensaje al mundo en cualquier idioma</h1>
+                    <p style="font-size:1.1rem; margin-bottom:2rem; max-width:540px;">
+                        Servicios de traducción de documentos, intérprete personal o conferencias, transcripción de audio y multimedia,
+                        cursos en lenguas extranjeras y capacitación para futuros colaboradores. 
+                    </p>
+                    <a href="contactenos.html" class="btn btn-primary hover-fx">Conócenos</a>
+                </div>
+                <div class="hero-image-wrapper">
+                    <img src="site_logo.png"
+                    alt="Logo de Cases Language Services"
+                    class="hero-logo"
+                    width="480"
+                    height="480" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats / Cifras -->
+        <section class="info-section">
+            <div class="stats-grid">
+                <div class="stat-item glass-card hover-fx">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Años de experiencia</div>
+                </div>
+                <div class="stat-item glass-card hover-fx">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Idiomas y variantes</div>
+                </div>
+                <div class="stat-item glass-card hover-fx">
+                    <div class="stat-number">130+</div>
+                    <div class="stat-label">Proyectos entregados</div>
+                </div>
+                <div class="stat-item glass-card hover-fx">
+                    <div class="stat-number">97%</div>
+                    <div class="stat-label">Satisfacción del cliente</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Nuestra Historia / Misión Visión Valores -->
+        <section class="info-section">
+            <div class="cards-grid">
+
+                <article class="card glass-card hover-fx">
+                    <h2 class="card-title">Nuestra Historia</h2>
+                    <p class="card-text">
+                        Fundada en 2026 por el lingüísta y políglota puertorriqueño Marcos Cases,
+                        Cases Language Services es una empresa de servicios lingüísticos con sede central en la ciudad de Piribebuy en Cordillera, Paraguay.
+                    </p>
+                    <p class="card-text" style="margin-top:1rem;">
+                        Nuestra misión es brindar servicios de traducción, transcripción, interpretación y cursos de idiomas a comunidades extranjeras en el Departamento Cordillera.
+                        La empresa se estableció con el objetivo de resolver la falta de acceso a servicios lingüísticos en el interior del país.
+                    </p>
+                </article>
+
+                <article class="card glass-card hover-fx">
+                    <h2 class="card-title">Beneficios</h2>
+                    <p class="card-text">
+                        Acceso rápido a ciudades del interior.
+                    </p>
+                    <p class="card-text">
+                        Gran variedad de servicios.
+                    </p>
+                    <p class="card-text">
+                        Formación académica y profesional.
+                    </p>
+                    <p class="card-text">
+                        Programa de capacitación para futuros colaboradores.
+                    </p>
+                    <p class="card-text">
+                        Atención personalizada y adaptada a tus necesidades.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <!-- Equipo -->
+        <section class="info-section">
+            <h2 style="font-family:var(--font-titles); font-size:2rem; font-weight:bold; color:var(--color-neutral-dark); text-align:center; margin-bottom:0.5rem;">
+                Conoce a nuestro equipo
+            </h2>
+            <p style="text-align:center; font-size:1.1rem; color:var(--color-secondary); margin-bottom:2rem;">
+                Profesionales apasionados por el lenguaje y la comunicación.
+            </p>
+
+            <div class="team-grid">
+                <div class="team-member glass-card hover-fx">
+                    <div style="font-size:3.5rem; margin-bottom:0.25rem;">👨‍💻</div>
+                    <div class="team-name">Marcos R. Cases Negrón</div>
+                    <div class="team-role">Fundador &amp; Director Ejecutivo</div>
+                    <div class="team-bio">Lingüísta y políglota con más de 3 años de experiencia en el campo de traducción castellano-inglés.
+                        Obtuvo su título de Bachillerato en Lenguas Extranjeras con concentración en alemán y chino (mandarín)
+                        de la Universidad de Puerto Rico en Río Piedras (UPRRP).</div>
+                </div>
+
+                <div class="team-member glass-card hover-fx">
+                    <div style="font-size:3.5rem; margin-bottom:0.25rem;">👩‍🏫</div>
+                    <div class="team-name">Marta G. Rojas Estigarribia</div>
+                    <div class="team-role">Supervisora de Personal Docente</div>
+                    <div class="team-bio">Filóloga y revisora senior, garantiza que el formato, metodología pedagógica y
+                        contenido curricular cumpla con los más altos estándares.</div>
+                </div>
+
+                <div class="team-member glass-card hover-fx">
+                    <div style="font-size:3.5rem; margin-bottom:0.25rem;">🧑‍🤝‍🧑</div>
+                    <div class="team-name">Equipo Global</div>
+                    <div class="team-role">+5 colaboradores</div>
+                    <div class="team-bio">Traductores e intérpretes nativos, especializados en múltiples sectores.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+  <footer class="site-footer glass-panel">
+    <div class="footer-container">
+      <div class="footer-contact">
+        <h3 class="footer-heading">Contacto</h3>
+        <p>Email: <a href="mailto:caseslanguages@gmail.com">caseslanguages@gmail.com</a></p>
+        <p>WhatsApp: +595 (0973) 793 110</p>
+      </div>
+
+      <div class="footer-social">
+        <h3 class="footer-heading">Síguenos</h3>
+        <div class="social-links">
+          <a href="#" class="social-link hover-fx" aria-label="LinkedIn">Facebook</a>
+          <a href="#" class="social-link hover-fx" aria-label="X (Twitter)">YouTube</a>
+        </div>
+      </div>
+
+      <div class="footer-copyright">
+        <p>&copy; 2026 Cases Language Services. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+<!-- Burbuja flotante de WhatsApp -->
+<a href="https://wa.me/5950973793110?text=Hola,%20deseo%20agendar%20una%20cita%20por%20vídeollamada%20con%20un%20representante." 
+   class="whatsapp-float hover-fx" 
+   target="_blank" 
+   rel="noopener noreferrer"
+   aria-label="Chatear por WhatsApp con un representante">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="currentColor">
+    <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+  </svg>
+</a>
+
+    <script>
+        /**
+         * Modern 2026 UI FX Controller
+         * Implements GPU-accelerated 3D dynamic tilt and cursor interactions.
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            init3DHoverEffect();
+        });
+
+        /**
+         * Initializes 3D tilt transformations for elements tagged with .hover-fx
+         */
+        function init3DHoverEffect() {
+            const interactiveElements = document.querySelectorAll('.hover-fx');
+
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return;
+            }
+
+            interactiveElements.forEach((element) => {
+                element.addEventListener('mousemove', (e) => handleTilt(e, element));
+                element.addEventListener('mouseleave', () => resetTilt(element));
+            });
+        }
+
+        /**
+         * Calculates mouse position relative to target bounding box
+         * and applies a subtle 3D rotational vector.
+         */
+        function handleTilt(event, element) {
+            const rect = element.getBoundingClientRect();
+
+            if (!rect.width || !rect.height) {
+                return;
+            }
+
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            // Maximum angular deflection (degrees)
+            const maxTilt = 8;
+
+            const tiltX = ((y - centerY) / centerY) * -maxTilt;
+            const tiltY = ((x - centerX) / centerX) * maxTilt;
+
+            if (element._tiltFrame) {
+                cancelAnimationFrame(element._tiltFrame);
+            }
+
+            element._tiltFrame = requestAnimationFrame(() => {
+                element.style.transform =
+                    `perspective(1000px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) translateZ(8px)`;
+                element._tiltFrame = null;
+            });
+        }
+
+        /**
+         * Restores original transform properties smoothly.
+         */
+        function resetTilt(element) {
+            if (element._tiltFrame) {
+                cancelAnimationFrame(element._tiltFrame);
+                element._tiltFrame = null;
+            }
+
+            requestAnimationFrame(() => {
+                element.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+            });
+        }
+    </script>
+</body>
+</html>
