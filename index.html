@@ -394,10 +394,10 @@ body {
       <div class="lang-switch-wrapper">
         <label for="lang-select" class="sr-only">Seleccionar idioma</label>
         <select id="lang-select" class="lang-dropdown hover-fx" aria-label="Cambiar idioma">
-          <option value="es" selected>Español</option>
-          <option value="en">English</option>
-          <option value="gn">Avañe'ẽ</option>
-          <option value="de">Deutsch</option>
+          <option href="index.html" value="es" selected>Español</option>
+          <option href="index_en.html" value="en">English</option>
+          <option href="index_gn.html" value="gn">Avañe'ẽ</option>
+          <option href="index_de.html" value="de">Deutsch</option>
         </select>
       </div>
     </nav>
@@ -493,7 +493,8 @@ body {
  */
 document.addEventListener('DOMContentLoaded', () => {
   init3DHoverEffect();
-  initAutoHidingHeader(); // <-- Añadimos esta nueva función
+  initAutoHidingHeader();
+  initLanguageSwitcher();
 });
 
 /**
@@ -585,6 +586,25 @@ function resetTilt(element) {
 
   requestAnimationFrame(() => {
     element.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+  });
+}
+/**
+ * Controla la redirección al cambiar el idioma en el menú desplegable.
+ */
+function initLanguageSwitcher() {
+  const langSelect = document.getElementById('lang-select');
+  if (!langSelect) return;
+
+  langSelect.addEventListener('change', (event) => {
+    const selectedOption = event.target.options[event.target.selectedIndex];
+    
+    // Obtenemos el archivo de destino desde el atributo href de la opción
+    const targetUrl = selectedOption.getAttribute('href');
+    
+    if (targetUrl) {
+      // Redirige a la página correspondiente al idioma seleccionado
+      window.location.href = targetUrl;
+    }
   });
 }
 </script>
