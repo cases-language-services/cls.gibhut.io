@@ -82,14 +82,22 @@
             box-shadow: var(--glass-shadow);
         }
 
-        /* Navigation Menu (PRD 4.1) */
-        .navbar-container {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 1rem 2rem;
-        }
+ /* Modificación / Adición en .navbar-container */
+.navbar-container {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 1rem 2rem;
+  /* Añadimos transición suave para la ocultación y aparición */
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease;
+}
 
+/* Clase que se activará con JS al hacer scroll hacia abajo */
+.navbar-container.header-hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none; /* Evita clics accidentales cuando está oculto */
+}
         .navbar {
             display: flex;
             justify-content: space-between;
@@ -730,6 +738,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             init3DHoverEffect();
             initCalculator();
+            initAutoHidingHeader();
         });
 
         function init3DHoverEffect() {
@@ -1051,6 +1060,35 @@
                 document.getElementById('calculator-section').scrollIntoView({ behavior: 'smooth' });
             });
         }
+/**
+ * Controla el comportamiento inteligente del header al hacer scroll.
+ * Se oculta al bajar y aparece al subir.
+ */
+function initAutoHidingHeader() {
+  const header = document.querySelector('.navbar-container');
+  if (!header) return;
+
+  let lastScrollTop = 0;
+  const delta = 5; // Margen mínimo de desplazamiento para activar la acción
+  const navbarHeight = header.offsetHeight;
+
+  window.addEventListener('scroll', () => {
+    let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Asegurar que el scroll supere el margen mínimo (delta)
+    if (Math.abs(lastScrollTop - scrollTop) <= delta) return;
+
+    if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
+      // Scroll hacia ABAJO -> Ocultar header
+      header.classList.add('header-hidden');
+    } else {
+      // Scroll hacia ARRIBA -> Mostrar header
+      header.classList.remove('header-hidden');
+    }
+
+    lastScrollTop = scrollTop;
+  }, { passive: true });
+}
     </script>
 </body>
 </html>
